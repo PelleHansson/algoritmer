@@ -79,14 +79,51 @@ public class Maxcut {
         }
         in.close();
    
-        int cutWeight = 0;
+        int cutWeightR = 0;
+        int totalWeightR = 0;
+        System.out.printf("R output:\n");
         for (int i = 0; i < 100; i++) {
             reset();
             R();
-            //S();
-            //RS();
-            cutWeight = Math.max(cutWeight, cutSum());
+            int currentCutWeight = cutSum();
+            cutWeightR = Math.max(cutWeightR, currentCutWeight);    
+            totalWeightR += currentCutWeight;
+            System.out.printf("%d\n", currentCutWeight);
         }
-        System.out.printf("cutWeight = %d\n", cutWeight);
+        int averageWeightR = totalWeightR / 100;
+        
+        int cutWeightS = 0;
+        int totalWeightS = 0;
+        System.out.printf("S output:\n");
+        for (int i = 0; i < 100; i++) {
+            reset();
+            S();
+            int currentCutWeight = cutSum();
+            cutWeightS = Math.max(cutWeightS, currentCutWeight);
+            totalWeightS += currentCutWeight;
+            System.out.printf("%d\n", currentCutWeight);
+        }
+        int averageWeightS = totalWeightS / 100;
+        int cutWeightRS = 0;
+        int totalWeightRS = 0;
+        System.out.printf("RS output:\n");
+        for (int i = 0; i < 100; i++) {
+            reset();
+            RS();
+            int currentCutWeight = cutSum();
+            cutWeightRS = Math.max(cutWeightRS, currentCutWeight);
+            totalWeightRS += currentCutWeight;
+
+            System.out.printf("%d\n", currentCutWeight);
+        }
+        int averageWeightRS = totalWeightRS / 100;
+
+
+        System.out.printf("cutWeightR = %d\n", cutWeightR);
+        System.out.printf("cutWeightS = %d\n", cutWeightS);
+        System.out.printf("cutWeightRS = %d\n", cutWeightRS);
+        System.out.printf("averageWeightR = %d\n", averageWeightR);
+        System.out.printf("averageWeightS = %d\n", averageWeightS);
+        System.out.printf("averageWeightRS = %d\n", averageWeightRS);
     }
 }
