@@ -91,39 +91,40 @@ public class Maxcut {
             System.out.printf("%d\n", currentCutWeight);
         }
         int averageWeightR = totalWeightR / 100;
+        System.out.printf("MaxCutWeightR = %d\n", cutWeightR);
+        System.out.printf("AverageCutWeightR = %d\n", averageWeightR);
         
-        int cutWeightS = 0;
-        int totalWeightS = 0;
-        System.out.printf("S output:\n");
-        for (int i = 0; i < 100; i++) {
-            reset();
-            S();
-            int currentCutWeight = cutSum();
-            cutWeightS = Math.max(cutWeightS, currentCutWeight);
-            totalWeightS += currentCutWeight;
-            System.out.printf("%d\n", currentCutWeight);
-        }
-        int averageWeightS = totalWeightS / 100;
-        int cutWeightRS = 0;
-        int totalWeightRS = 0;
-        System.out.printf("RS output:\n");
-        for (int i = 0; i < 100; i++) {
-            reset();
-            RS();
-            int currentCutWeight = cutSum();
-            cutWeightRS = Math.max(cutWeightRS, currentCutWeight);
-            totalWeightRS += currentCutWeight;
+        // int cutWeightS = 0;
+        // int totalWeightS = 0;
+        // System.out.printf("S output:\n");
+        // for (int i = 0; i < 100; i++) {
+            //     reset();
+            //     S();
+            //     int currentCutWeight = cutSum();
+            //     cutWeightS = Math.max(cutWeightS, currentCutWeight);
+            //     totalWeightS += currentCutWeight;
+            //     System.out.printf("%d\n", currentCutWeight);
+        // }
+        // int averageWeightS = totalWeightS / 100;
+        // System.out.printf("MaxCutWeightS = %d\n", cutWeightS);
+        // System.out.printf("AverageCutWeightS = %d\n", averageWeightS);
+        
+        
+        // int cutWeightRS = 0;
+        // int totalWeightRS = 0;
+        // System.out.printf("RS output:\n");
+        // for (int i = 0; i < 100; i++) {
+            //     reset();
+            //     RS();
+            //     int currentCutWeight = cutSum();
+            //     cutWeightRS = Math.max(cutWeightRS, currentCutWeight);
+            //     totalWeightRS += currentCutWeight;
+            
+            //     System.out.printf("%d\n", currentCutWeight);
+            // }
+            // int averageWeightRS = totalWeightRS / 100;
 
-            System.out.printf("%d\n", currentCutWeight);
-        }
-        int averageWeightRS = totalWeightRS / 100;
-
-
-        System.out.printf("cutWeightR = %d\n", cutWeightR);
-        System.out.printf("cutWeightS = %d\n", cutWeightS);
-        System.out.printf("cutWeightRS = %d\n", cutWeightRS);
-        System.out.printf("averageWeightR = %d\n", averageWeightR);
-        System.out.printf("averageWeightS = %d\n", averageWeightS);
-        System.out.printf("averageWeightRS = %d\n", averageWeightRS);
+        // System.out.printf("MaxCutWeightRS = %d\n", cutWeightRS);
+        // System.out.printf("AverageCutWeightRS = %d\n", averageWeightRS);
     }
 }
