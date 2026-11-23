@@ -2,100 +2,118 @@ import java.io.*;
 import java.util.*;
 
 public class indset {
-    // static class Edge {
-    //     Node u;
-    //     Node v;
-    //     Edge(Node u, Node v){
-    //         this.u = u;
-    //         this.v = v;
+    static Map<Integer, Set<Integer>> copy(Map<Integer, Set<Integer>> g) {
+        Map<Integer, Set<Integer>> h = new HashMap<>();
+        for (var e : g.entrySet()) h.put(e.getKey(), new HashSet<>(e.getValue()));
+        return h;
+    }
+    static Map<Integer, Set<Integer>> minus(Map<Integer, Set<Integer>> a, Set<Integer> b) {   // a − b
+        Map<Integer, Set<Integer>> r = copy(a);    
+        r.keySet().removeAll(b);
+        for (Set<Integer> s : r.values()) s.removeAll(b);
 
-    //    }
-    // // }
-    // static class V {
-     
-    //     //List<Edge> edges = new ArrayList<>();
-    //     //Set<V> neighbors = new HashSet<>();
-    //     V () {
-           
-    //     }
-        
-    //     int degree() {
-    //         int deg = 0;
-    //         for (boolean b : neighbors) {
-    //             if (b) deg++;
-    //         }
-    //         return deg;
-    //     }
-    //     // Set<V> N() {
-    //     //     Set<V> neighborSet = new HashSet<>(neighbors);
-    //     //     neighborSet.add(this);
-    //     //     return neighborSet;
-    //     // }
-    // }
-    static Set<Integer> minus(Set<Integer> a, Set<Integer> b) {   // a − b
-        Set<Integer> r = new HashSet<>(a);
-        r.removeAll(b);
         return r;
     }
-    static Set<Integer> minus(Set<Integer> a, Integer b) {   // a − b
-        Set<Integer> r = new HashSet<>(a);
-        r.remove(b);
-        return r;
-    }
+  
 
-     static int degree(int v, Set<Integer> g) {
-        int d = 0;
-        for (int w : edges.get(v)) if (g.contains(w)) d++;
-        return d;
+    static int degree(int v, Map<Integer, Set<Integer>> g) {
+        return g.get(v).size();
     }
-    Set<Integer> N(int v) {
-        Set<Integer> neighborSet = new HashSet<>(edges.get(v));
+    static Set<Integer> N(int v, Map<Integer, Set<Integer>> g) {
+        Set<Integer> neighborSet = new HashSet<>(g.get(v));
         neighborSet.add(v);
         return neighborSet;
     }
 
  
    
-   int R0( Set<Integer> g) {
+   static int R0( Map<Integer, Set<Integer>> g) {
+        count++;
         if (g.isEmpty()) return 0;
         int u = -1; int max = -1;
-        for (int v : g) {
+        for (int v : g.keySet()) {
             int d = degree(v, g);
 
-            if (d == 0) return 1 + R0(minus(g, v));
-            if( d > max) max = v;            
+            if (d == 0) return 1 + R0(minus(g, Set.of(v)));
+            if( d > max) { max = d;  u = v; }           
         }
-        return Math.max(1 + R0(minus(g, N(u))), R0(minus(g, u)));
+        return Math.max(1 + R0(minus(g, N(u, g))), R0(minus(g, Set.of(u))));
     }
-  
+    static int R1( Map<Integer, Set<Integer>> g) {
+        count++;
+        if (g.isEmpty()) return 0;
+        int u = -1; int max = -1;
+        for (int v : g.keySet()) {
+            int d = degree(v, g);
 
-    // static V[] g;
-    //static Set<Integer> g;
-    static Map<Integer, Set<Integer>> edges = new HashMap<>();
-  
+            if (d == 0) return 1 + R1(minus(g, Set.of(v)));
+            if (d == 1) return 1 + R1(minus(g, N(v, g)));
+            if( d > max) { max = d;  u = v; }         
+        }
+        return Math.max(1 + R1(minus(g, N(u, g))), R1(minus(g, Set.of(u))));
+    }
+    static int R2( Map<Integer, Set<Integer>> g) {
+        count++;
+        if (g.isEmpty()) return 0;
+        int u = -1; int max = -1;
+        for (int v : g.keySet()) {
+            int d = degree(v, g);
+
+            if (d == 0) return 1 + R2(minus(g, Set.of(v)));
+            if (d == 1) return 1 + R2(minus(g, N(v, g)));
+            if (d == 2) {
+                Iterator<Integer> neighborIterator = g.get(v).iterator();
+                int a = neighborIterator.next();
+                int b = neighborIterator.next();
+                if (g.get(a).contains(b)) return 1 + R2(minus(g, N(v, g))); 
+                else {
+                    Set<Integer> zNeigh = new HashSet<>();
+                    zNeigh.addAll(g.get(a));
+                    zNeigh.addAll(g.get(b));
+                    zNeigh.remove(v);
+                    zNeigh.remove(a);
+                    zNeigh.remove(b);
+                    Map<Integer, Set<Integer>> g2 = minus(g, N(v, g));   
+                    g2.put(v, zNeigh);                                    
+                    for (int x : zNeigh) g2.get(x).add(v);                   
+                    return 1 + R2(g2);
+                }
+
+            }
+            if( d > max) { max = d;  u = v; }         
+        }
+        return Math.max(1 + R2(minus(g, N(u, g))), R2(minus(g, Set.of(u))));
+    }
 
 
-   // static List<Edge> allEdges = new ArrayList<>();
     static Random r = new Random();
-
+    static long count = 0;
     public static void main(String[] args) throws IOException{
         Scanner in = new Scanner(new File(args[0]));
         int n = in.nextInt();
 
-        //graph = new boolean[n][n + 1]; // 0 index is used for if in the independent set
-        // V[] g = new V[n];
-        Set<Integer> g = new HashSet<>();
+
+        Map<Integer, Set<Integer>> graph = new HashMap<>();
         for (int i = 0; i < n; i++){
             Set<Integer> neighbors = new HashSet<>();
             for (int j = 0; j < n; j++) {
                 int hasEdge = in.nextInt();
                 if (hasEdge == 1) {
                     neighbors.add(j);
-                }                                                  
-            g.add(i);
-            edges.put(i, neighbors);    
+                }                      
+            }                            
+            graph.put(i, neighbors);    
         } 
         in.close();
 
+        int result = 0;
+        count = 0;
+        //result = R0(graph);
+        //System.out.println("R0: " + result  + ", calls: " + count + ", log: " + Math.log(count));
+        //count = 0;
+        result = R1(graph);
+        System.out.println("R1: " + result + ", calls: " + count + ", log: " + Math.log(count));
+        //result = R2(graph);
+        //System.out.println("R2: " + result + ", calls: " + count + ", log: " + Math.log(count));     
     }
 }
