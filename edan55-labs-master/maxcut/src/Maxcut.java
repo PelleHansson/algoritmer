@@ -31,9 +31,7 @@ public class Maxcut {
 
     static void R(){
         for (Node node : nodes) {
-           if (r.nextBoolean()) {
-                node.inA = true;
-           }
+            node.inA = r.nextBoolean();
         }
     }
 
